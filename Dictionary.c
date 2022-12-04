@@ -92,44 +92,16 @@ int set_search_and_return(struct set_table *table, const char *key, const size_t
     return 0; // se non trovo la chiave ritorno NULL
 }
 
-int rehash(struct set_table *table) // funzione Rehash
-{
-
-    printf("Rehash");
-    hashmap_size++;
-
-    for (int i = 0; i > table->size; i++) // scorro la lista
-    {
-        size_t hash = djb33x_hash(table->nodes[i]->key, hashmap_size);
-    }
-
-    return 0;
-}
-
 struct set_node *set_insert(struct set_table *table, const char *key, const size_t key_len, int Value) // inserisce un elemento nella tabella
 {
     size_t hash = djb33x_hash(key, key_len); // calcola l'hash della chiave
     size_t index = hash % table->hashmap_size; // calcola l'indice della tabella
     struct set_node *head = table->nodes[index]; // inizializza il nodo iniziale con il nodo dell'indice
-    printf("insert");
-    if(set_search(table, key, hashmap_size)->key != NULL)
+    
+    if(set_search(table, key, hashmap_size) != NULL)
     {
-        printf("Something found");
-        if((set_search(table, key, hashmap_size))->key == key)
-        {
-        printf("Prerehash");
-        rehash(table);
-        }
-        else
-        {
-        printf("null");
-        return NULL;
-        }
-         
+        return NULL;         
     }
-    printf("continue");
-
-
 
     if (!head) // se il nodo iniziale non esiste
     {
@@ -187,8 +159,6 @@ struct set_node *set_remove(struct set_table *table, const char *key, const size
     }
     return NULL; // se non trovo la chiave ritorno NULL
 }
-
-
 
 int main()
 {
