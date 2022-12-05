@@ -81,14 +81,10 @@ int main()
 {
     const int hashmap_size = 10;
     struct set_table *table = set_table_new(hashmap_size);
-    set_insert(table, "Hello", hashmap_size);
-    set_insert(table, "World", hashmap_size);
-    set_insert(table, "Ciao in Italiano", hashmap_size);
-    set_insert(table, "Mondo in Italiano", hashmap_size);
-    set_insert(table, "Sorry", hashmap_size);
-
-    //printf("value is: %s\n", set_search(table, "Ciao in Italiano", hashmap_size)->key);
-    //set_remove(table, "World", hashmap_size);
-    //printf("value is: %s\n", set_search(table, "World", hashmap_size)->key);
+    set_insert(table, "Test1", hashmap_size);
+    set_insert(table, "Test2", hashmap_size);
+    set_insert(table, "Test3", hashmap_size);
+    set_insert(table, "Test4", hashmap_size);
+    set_insert(table, "Test5", hashmap_size);
     return 0;
 }
