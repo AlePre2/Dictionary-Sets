@@ -13,6 +13,7 @@
 ● They are unique sets with a value
 ● Implement them over the set structures to support any kind of value
 */
+
 int hashmap_size = 10;
 
 struct set_node
@@ -30,11 +31,11 @@ struct set_table
     size_t size;
 };
 
-size_t djb33x_hash(const char *key, const size_t keylen) // funzione Hash
+size_t djb33x_hash(const char *key, const size_t keylen) // Hashing function
 {
     size_t hash = 5381;
 
-    for (size_t i = 0; i < keylen; i++) // per ogni carattere della stringa key (lunghezza keylen)
+    for (size_t i = 0; i < keylen; i++)
     {
         hash = ((hash << 5) + hash) ^ key[i]; 
     }
@@ -59,120 +60,120 @@ struct set_table *set_table_new(const size_t hashmap_size)
     return table;
 }
 
-struct set_node *set_search(struct set_table *table, const char *key, const size_t key_len) // cerco un nodo
+struct set_node *set_search(struct set_table *table, const char *key, const size_t key_len) // Find key
 {
-    size_t hash = djb33x_hash(key, key_len); // calcolo la chiave hash
-    size_t index = hash % table->hashmap_size; // calcolo l'indice
-    struct set_node *head = table->nodes[index]; // prendo la testa della lista
-    while (head) // scorro la lista
+    size_t hash = djb33x_hash(key, key_len);
+    size_t index = hash % table->hashmap_size;
+    struct set_node *head = table->nodes[index];
+    while (head)
     {
-        if (head->key == key) // se trovo la chiave
+        if (head->key == key)
         {
-            return head; // ritorno il nodo
+            return head;
         }
-        head = head->next; // scorro la lista
+        head = head->next;
     }
-    return NULL; // se non trovo la chiave ritorno NULL
+    return NULL;
 }
 
 
-int set_search_and_return(struct set_table *table, const char *key, const size_t key_len) // cerco un nodo
+int set_search_and_return(struct set_table *table, const char *key, const size_t key_len)
 {
-    size_t hash = djb33x_hash(key, key_len); // calcolo la chiave hash
-    size_t index = hash % table->hashmap_size; // calcolo l'indice
-    struct set_node *head = table->nodes[index]; // prendo la testa della lista
-    while (head) // scorro la lista
+    size_t hash = djb33x_hash(key, key_len);
+    size_t index = hash % table->hashmap_size;
+    struct set_node *head = table->nodes[index];
+    while (head)
     {
-        if (head->key == key) // se trovo la chiave
+        if (head->key == key)
         {
-            return head->value; // ritorno il nodo
+            return head->value;
         }
-        head = head->next; // scorro la lista
+        head = head->next;
     }
-    return 0; // se non trovo la chiave ritorno NULL
+    return 0;
 }
 
-struct set_node *set_insert(struct set_table *table, const char *key, const size_t key_len, int Value) // inserisce un elemento nella tabella
+struct set_node *set_insert(struct set_table *table, const char *key, const size_t key_len, int Value)
 {
-    size_t hash = djb33x_hash(key, key_len); // calcola l'hash della chiave
-    size_t index = hash % table->hashmap_size; // calcola l'indice della tabella
-    struct set_node *head = table->nodes[index]; // inizializza il nodo iniziale con il nodo dell'indice
+    size_t hash = djb33x_hash(key, key_len);
+    size_t index = hash % table->hashmap_size;
+    struct set_node *head = table->nodes[index];
     
     if(set_search(table, key, hashmap_size) != NULL)
     {
         return NULL;         
     }
 
-    if (!head) // se il nodo iniziale non esiste
+    if (!head)
     {
-        head = malloc(sizeof(struct set_node)); // alloca la memoria per il nuovo nodo
-        if (!head) // se il nuovo nodo non esiste
+        head = malloc(sizeof(struct set_node));
+        if (!head)
         {
-            return NULL; // ritorna nullo
+            return NULL;
         }
-        head->key = key; // assegna la chiave al nuovo nodo
-        head->key_len = key_len; // assegna la lunghezza della chiave al nuovo nodo
-        head->next = NULL; // assegna il nodo successivo a NULL
-        table->nodes[index] = head; // assegna il nodo dell'indice con il nodo iniziale
+        head->key = key;
+        head->key_len = key_len;
+        head->next = NULL;
+        table->nodes[index] = head;
         head->value = Value;
-        return head; // ritorna il nodo iniziale
+        return head;
     }
-    struct set_node *new_item = malloc(sizeof(struct set_node)); // alloca la memoria per il nuovo nodo
-    if (!new_item) // se il nuovo nodo non esiste
+    struct set_node *new_item = malloc(sizeof(struct set_node)); // Allocate memory for a new node
+    if (!new_item)
     {
-        return NULL; // ritorna nullo
+        return NULL;
     }
-    new_item->key = key; // assegna la chiave al nuovo nodo
-    new_item->key_len = key_len; // assegna la lunghezza della chiave al nuovo nodo
+    new_item->key = key;
+    new_item->key_len = key_len;
     new_item->next = NULL;
-    new_item->value = Value; // assegna il nodo successivo a NULL 
-    struct set_node *tail = head; // inizializza il nodo finale con il nodo iniziale 
+    new_item->value = Value;
+    struct set_node *tail = head;
 
-    tail->next = new_item; // assegna il nodo successivo del nodo finale con il nuovo nodo
-    return new_item; // ritorna il nuovo nodo
+    tail->next = new_item;
+    return new_item;
 }
 
 
 
-struct set_node *set_remove(struct set_table *table, const char *key, const size_t key_len) // rimuovo un nodo
+struct set_node *set_remove(struct set_table *table, const char *key, const size_t key_len) // Remove node
 {
-    size_t hash = djb33x_hash(key, key_len); // calcolo la chiave hash
-    size_t index = hash % table->hashmap_size; // calcolo l'indice
-    struct set_node *head = table->nodes[index]; // prendo la testa della lista
-    struct set_node *prev; // nodo precedente
-    while (head) // scorro la lista
+    size_t hash = djb33x_hash(key, key_len);
+    size_t index = hash % table->hashmap_size;
+    struct set_node *head = table->nodes[index];
+    struct set_node *prev;
+    while (head)
     {
-        if (head->key == key) // se trovo la chiave 
+        if (head->key == key)
         {
-            if (head == table->nodes[index]) // se è la testa della lista 
+            if (head == table->nodes[index])
             {
-                table->nodes[index] = head->next; // assegno la testa della lista al nodo successivo
+                table->nodes[index] = head->next;
             }
-            else // se non è la testa della lista
+            else
             {
-                prev->next = head->next; // il nodo precedente punta al nodo successivo del nodo corrente
+                prev->next = head->next;
             }
-            return head; // ritorno il nodo
+            return head;
         }
-        prev = head; // aggiorno il nodo precedente con il nodo corrente
-        head = head->next; // scorro la lista 
+        prev = head;
+        head = head->next; 
     }
-    return NULL; // se non trovo la chiave ritorno NULL
+    return NULL;
 }
 
 int main()
 {
     struct set_table *table = set_table_new(hashmap_size);
-    set_insert(table, "Hello", hashmap_size, 82);
-    set_insert(table, "World", hashmap_size, 12);
-    set_insert(table, "Ciao in Italiano", hashmap_size, 11);
-    set_insert(table, "Mondo in Italiano", hashmap_size, 909);
-    set_insert(table, "Sorry", hashmap_size, -87);
+    set_insert(table, "Test1", hashmap_size, 82);
+    set_insert(table, "Test2", hashmap_size, 12);
+    set_insert(table, "Test3", hashmap_size, 11);
+    set_insert(table, "Test4", hashmap_size, 909);
+    set_insert(table, "Test5", hashmap_size, -87);
 
-    printf("value is: %s\n", set_search(table, "Ciao in Italiano", hashmap_size)->key);
-    printf("value is: %d\n", set_search_and_return(table, "Ciao in Italiano", hashmap_size));
+    printf("value is: %s\n", set_search(table, "Test3", hashmap_size)->key);
+    printf("value is: %d\n", set_search_and_return(table, "Test2", hashmap_size));
 
-    set_remove(table, "World", hashmap_size);
-    printf("value is: %s\n", set_search(table, "World", hashmap_size)->key);
+    set_remove(table, "Test2", hashmap_size);
+    printf("value is: %s\n", set_search(table, "Test2", hashmap_size)->key);
     return 0;
 }
